@@ -34,7 +34,7 @@ SPECS: tuple[ModelSpec, ...] = (
     ModelSpec(
         models.HostFile,
         "files",
-        ("path", "owner", "group", "mode", "format", "separator", "header", "description"),
+        ("path", "owner", "group", "mode", "format", "separator", "indent", "header", "description"),
         ("path", "format"),
         ("path", "description"),
     ),
@@ -70,4 +70,4 @@ PLUGIN_FKS: dict[str, type] = {
 }
 
 #: Fields whose leading/trailing whitespace is meaningful (a " = " separator, an indented value).
-WHITESPACE_FIELDS = frozenset({"separator", "value"})
+WHITESPACE_FIELDS = frozenset({"separator", "indent", "value"})

@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "netbox-host"
-version = "0.0.1"
+version = "0.0.2"
 description = "Native NetBox source of truth for host and container OS configuration"
 readme = "README.md"
 requires-python = ">=3.11"

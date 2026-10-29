@@ -113,7 +113,7 @@ class HostFileAPITest(*_CRUD):
             [HostFile(virtual_machine=vm, path=f"/etc/{n}.env", format=FileFormatChoices.ENV) for n in "abc"]
         )
         cls.create_data = [
-            {"virtual_machine": vm.pk, "path": "/etc/samba/smb.conf", "format": "ini"},
+            {"virtual_machine": vm.pk, "path": "/etc/samba/smb.conf", "format": "ini", "indent": "   "},
             {"virtual_machine": vm.pk, "path": "/etc/foo.conf", "format": "key_value", "separator": " = "},
             {"virtual_machine": vm.pk, "path": "/etc/systemd/system/x.service", "format": "systemd", "mode": "0600"},
         ]
@@ -171,3 +171,24 @@ class HostPackageAPITest(*_CRUD):
             {"virtual_machine": vm.pk, "manager": "uv", "name": "jupyterlab", "version": "4.2.5"},
             {"virtual_machine": vm.pk, "name": "nginx", "state": "absent"},
         ]
+
+
+class WhitespaceRoundTripTest(_PluginAPI, APIViewTestCases.CreateObjectViewTestCase):
+    """indent, separator and value keep their leading/trailing whitespace through the API."""
+
+    model = HostFile
+    brief_fields: ClassVar[list[str]] = ["device", "display", "format", "id", "path", "url", "virtual_machine"]
+
+    @classmethod
+    def setUpTestData(cls):
+        vm = make_vm("ws-vm")
+        cls.create_data = [
+            {"virtual_machine": vm.pk, "path": "/etc/a.conf", "format": "ini", "indent": "   ", "separator": " = "},
+            {"virtual_machine": vm.pk, "path": "/etc/b.conf", "format": "key_value", "separator": " "},
+            {"virtual_machine": vm.pk, "path": "/etc/c.conf", "format": "ini", "indent": "\t"},
+        ]
+
+    def test_whitespace_is_stored_verbatim(self):
+        self.test_create_object()
+        stored = HostFile.objects.get(path="/etc/a.conf")
+        self.assertEqual((stored.indent, stored.separator), ("   ", " = "))

@@ -176,6 +176,11 @@ class HostFile(_OwnedPath):
         blank=True,
         help_text="Key/value separator for the key_value format (e.g. ' = ' or ' ').",
     )
+    indent = models.CharField(
+        max_length=16,
+        blank=True,
+        help_text="Leading whitespace for key entries inside a section (ini/systemd).",
+    )
     header = models.CharField(max_length=255, blank=True, help_text="A comment line written at the top.")
     description = models.CharField(max_length=255, blank=True)
 
