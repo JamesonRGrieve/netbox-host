@@ -1,0 +1,24 @@
+{# SPDX-License-Identifier: AGPL-3.0-or-later #}
+{% extends 'generic/object.html' %}
+
+{% block content %}
+  <div class="row mb-3">
+    <div class="col col-md-8">
+      <div class="card">
+        <h2 class="card-header">{{ object|meta:"verbose_name"|bettertitle }}</h2>
+        <table class="table table-hover attr-table">
+          {% for label, value in rows %}
+            <tr>
+              <th scope="row">{{ label|bettertitle }}</th>
+              <td>{% if value.get_absolute_url %}<a href="{{ value.get_absolute_url }}">{{ value }}</a>{% else %}{{ value|placeholder }}{% endif %}</td>
+            </tr>
+          {% endfor %}
+        </table>
+      </div>
+      {% include 'inc/panels/tags.html' %}
+    </div>
+    <div class="col col-md-4">
+      {% include 'inc/panels/custom_fields.html' %}
+    </div>
+  </div>
+{% endblock %}
